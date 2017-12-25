@@ -18,7 +18,7 @@ Binary releases are coming!
 
 ## Creating an `Efs2file`
 
-Rather than using a `yaml` based desired state structure. Effing Shell Scripts 2 tries to keep things simple. Create a simple `Efs2file` and define what files to copy and scripts/commands to run.
+Rather than using a `yaml` based desired state structure. Effing Shell Scripts 2 tries to keep things simple. Just create a `Efs2file` and define what files to copy and scripts/commands to run.
 
 Let's take a look at an example file.
 
@@ -34,7 +34,7 @@ PUT files/main.cf /etc/postfix/main.cf 0644
 # Copy the setup_postfix.sh script to the remote host and then execute it
 RUN SCRIPT setup_postfix.sh
 
-# Execute a single line command on the remote host
+# Execute a one liner command on the remote host
 RUN CMD ps -elf | grep -q postfix
 ```
 
@@ -59,14 +59,17 @@ $ efs2 host1.example.com host2.example.com
 
 **Available command line options:**
 ```
-  -v, --verbose   Enable verbose output
-  -f, --file=     Specify an alternative Efs2file (default: ./Efs2file)
-  -i, --key=      Specify an SSH Private key to use (default: ~/.ssh/id_rsa)
-  -p, --parallel  Execute tasks in parallel (default: false)
-  -d, --dryrun    Print tasks to be executed without actually executing any tasks
-      --port=     Define an alternate SSH Port (default: 22)
+-v, --verbose   Enable verbose output
+-f, --file=     Specify an alternative Efs2file (default: ./Efs2file)
+-i, --key=      Specify an SSH Private key to use (default: ~/.ssh/id_rsa)
+-p, --parallel  Execute tasks in parallel (default: false)
+-d, --dryrun    Print tasks to be executed without actually executing any tasks
+    --port=     Define an alternate SSH Port (default: 22)
+-u, --user=     Remote host username (default: current user)
 ```
 
 ## TODO
 
 * Directory support for `PUT`
+* Example `Efs2file`s
+* Binary creation and packaging for the masses

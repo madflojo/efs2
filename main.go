@@ -14,6 +14,7 @@ type options struct {
 	Keyfile  string `short:"i" long:"key" description:"Specify an SSH Private key to use (default: ~/.ssh/id_rsa)"`
 	Parallel bool   `short:"p" long:"parallel" description:"Execute tasks in parallel (default: false)"`
 	Dryrun   bool   `short:"d" long:"dryrun" description:"Print tasks to be executed without actually executing any tasks"`
+  Port     string    `long:"port" description:"Define an alternate SSH Port (default: 22)" default:"22"`
 }
 
 var opts options
@@ -55,6 +56,7 @@ func main() {
 	}
 
 	for _, h := range args {
+    h = h + ":" + opts.Port
 		if opts.Parallel {
 			var wg sync.WaitGroup
 			wg.Add(1)

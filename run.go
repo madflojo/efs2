@@ -8,7 +8,7 @@ import (
 
 // Executes a remote command over ssh
 func Run(task *command, h string, conf *ssh.ClientConfig) error {
-	c, err := ssh.Dial("tcp", h+":22", conf)
+	c, err := ssh.Dial("tcp", h, conf)
 	if err != nil {
 		fmt.Printf("%s: Error connecting to host - %s\n", h, err)
 		return err

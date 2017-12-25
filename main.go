@@ -56,8 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
-
-  var wg sync.WaitGroup
+	var wg sync.WaitGroup
 	for _, h := range args {
 		x := h + ":" + opts.Port
 		if opts.Parallel {

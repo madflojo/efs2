@@ -15,6 +15,7 @@ type options struct {
 	Parallel bool   `short:"p" long:"parallel" description:"Execute tasks in parallel (default: false)"`
 	Dryrun   bool   `short:"d" long:"dryrun" description:"Print tasks to be executed without actually executing any tasks"`
 	Port     string `long:"port" description:"Define an alternate SSH Port (default: 22)" default:"22"`
+	User     string `short:"u" long:"user" description:"Remote host username (default: current user)"`
 }
 
 var opts options

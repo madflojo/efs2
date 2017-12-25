@@ -27,6 +27,10 @@ func initSSH(opts options) (*ssh.ClientConfig, error) {
 	}
 	username := usr.Username
 
+	if opts.User != "" {
+		username = opts.User
+	}
+
 	keyfile := usr.HomeDir + "/.ssh/id_rsa"
 	if opts.Keyfile != "" {
 		keyfile = opts.Keyfile

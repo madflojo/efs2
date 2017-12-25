@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
-	"fmt"
 )
 
 // Puts a local file to a remote destination over SSH
@@ -37,7 +37,7 @@ func Put(file *file, h string, conf *ssh.ClientConfig) error {
 	_, err = sf.Write(f)
 	if err != nil {
 		fmt.Printf("%s: Error writing remote file - %s\n", h, err)
-    sf.Close()
+		sf.Close()
 		return err
 	}
 	sf.Close()

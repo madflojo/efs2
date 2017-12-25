@@ -42,5 +42,5 @@ func initSSH(opts options) (*ssh.ClientConfig, error) {
 		Auth:            []ssh.AuthMethod{ssh.PublicKeys(key)},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
-  return sshConf, nil
+	return sshConf, nil
 }

@@ -33,9 +33,9 @@ func parseFile(f string) ([]*task, error) {
 
 		l := strings.TrimSpace(s.Text())
 		t := &task{
-      command: &command{},
-      file: &file{},
-    }
+			command: &command{},
+			file:    &file{},
+		}
 
 		if runRe.MatchString(l) {
 			t.task = l
@@ -47,7 +47,7 @@ func parseFile(f string) ([]*task, error) {
 			}
 
 			if c[1] == "SCRIPT" {
-        dest := "/tmp/" + tempFilename()
+				dest := "/tmp/" + tempFilename()
 				t.command.cmd = dest
 				t.command.active = true
 				t.file.active = true

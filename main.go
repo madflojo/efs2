@@ -56,21 +56,22 @@ func main() {
 		os.Exit(1)
 	}
 
+
+  var wg sync.WaitGroup
 	for _, h := range args {
-		h = h + ":" + opts.Port
+		x := h + ":" + opts.Port
 		if opts.Parallel {
-			var wg sync.WaitGroup
 			wg.Add(1)
 			go func(wg *sync.WaitGroup) {
-				defer wg.Done()
-				execTasks(tasks, h, sshConf)
+				execTasks(tasks, x, sshConf)
+				wg.Done()
 				return
 			}(&wg)
-			wg.Wait()
 		} else {
-			execTasks(tasks, h, sshConf)
+			execTasks(tasks, x, sshConf)
 		}
 	}
+	wg.Wait()
 }
 
 func execTasks(tasks []*task, h string, sshConf *ssh.ClientConfig) {

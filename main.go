@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/fatih/color"
 	"github.com/jessevdk/go-flags"
 	"golang.org/x/crypto/ssh"
 	"os"
@@ -14,7 +14,7 @@ type options struct {
 	Keyfile  string `short:"i" long:"key" description:"Specify an SSH Private key to use (default: ~/.ssh/id_rsa)"`
 	Parallel bool   `short:"p" long:"parallel" description:"Execute tasks in parallel (default: false)"`
 	Dryrun   bool   `short:"d" long:"dryrun" description:"Print tasks to be executed without actually executing any tasks"`
-  Port     string    `long:"port" description:"Define an alternate SSH Port (default: 22)" default:"22"`
+	Port     string `long:"port" description:"Define an alternate SSH Port (default: 22)" default:"22"`
 }
 
 var opts options
@@ -45,18 +45,18 @@ func main() {
 
 	sshConf, err := initSSH(opts)
 	if err != nil {
-		fmt.Printf("Unable to setup SSH client configuration - %s\n", err)
+		color.Red("Unable to setup SSH client configuration - %s", err)
 		os.Exit(1)
 	}
 
 	tasks, err := parseFile(opts.Efs2file)
 	if err != nil {
-		fmt.Printf("Error parsing Efs2file - %s\n", err)
+		color.Red("Error parsing Efs2file - %s", err)
 		os.Exit(1)
 	}
 
 	for _, h := range args {
-    h = h + ":" + opts.Port
+		h = h + ":" + opts.Port
 		if opts.Parallel {
 			var wg sync.WaitGroup
 			wg.Add(1)
@@ -74,23 +74,23 @@ func main() {
 
 func execTasks(tasks []*task, h string, sshConf *ssh.ClientConfig) {
 	for n, t := range tasks {
-		fmt.Printf("%s: Executing task %d - %s\n", h, n, t.task)
+		color.Blue("%s: Executing task %d - %s", h, n, t.task)
 		if opts.Dryrun {
 			continue
 		}
 		if t.file.active {
 			err := Put(t.file, h, sshConf)
 			if err != nil {
-				fmt.Printf("%s: Error placing remote file - %s\n", h, err)
-				fmt.Printf("%s: Stopping execution due to too many errors\n", h)
+				color.Red("%s: Error placing remote file - %s", h, err)
+				color.Red("%s: Stopping execution due to too many errors", h)
 				return
 			}
 		}
 		if t.command.active {
 			err := Run(t.command, h, sshConf)
 			if err != nil {
-				fmt.Printf("%s: Error executing command - %s\n", h, err)
-				fmt.Printf("%s: Stopping execution due to too many errors\n", h)
+				color.Red("%s: Error executing command - %s", h, err)
+				color.Red("%s: Stopping execution due to too many errors", h)
 				return
 			}
 		}

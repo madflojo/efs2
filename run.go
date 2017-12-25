@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/fatih/color"
 	"golang.org/x/crypto/ssh"
 	"strings"
 )
@@ -10,28 +10,28 @@ import (
 func Run(task *command, h string, conf *ssh.ClientConfig) error {
 	c, err := ssh.Dial("tcp", h, conf)
 	if err != nil {
-		fmt.Printf("%s: Error connecting to host - %s\n", h, err)
+		color.Red("%s: Error connecting to host - %s", h, err)
 		return err
 	}
 	s, err := c.NewSession()
 	if err != nil {
-		fmt.Printf("%s: Error creating new ssh session to host - %s\n", h, err)
+		color.Red("%s: Error creating new ssh session to host - %s", h, err)
 		return err
 	}
 	defer s.Close()
 
 	r, err := s.CombinedOutput(task.cmd)
 	if err != nil {
-		fmt.Printf("%s Failed to execute task on host - %s\n", h, err)
+		color.Red("%s Failed to execute task on host - %s", h, err)
 		return err
 	}
 	if opts.Verbose {
-		fmt.Printf("%s: Task Output\n", h)
-		fmt.Printf("%s: ------------------------\n", h)
+		color.Blue("%s: Task Output", h)
+		color.Blue("%s: ------------------------", h)
 		for _, x := range strings.Split(string(r), "\n") {
-			fmt.Printf("%s: %s\n", h, x)
+			color.Cyan("%s: %s\n", h, x)
 		}
-		fmt.Printf("%s: ------------------------\n", h)
+		color.Blue("%s: ------------------------", h)
 	}
 	return nil
 }

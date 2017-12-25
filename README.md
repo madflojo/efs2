@@ -39,10 +39,22 @@ Once the `Efs2file` is defined you can execute it against any number of target h
 $ efs2 host1.example.com host2.example.com
 ```
 
-## Command Execution
+### Options
 
-It is also possible to simply use efs2 as a command execution system.
+```
+Usage:
+  app [OPTIONS]
 
-```sh
-$ efs2 -c "systemctl enable nginx" host1.example.com host2.example.com
+Application Options:
+  -v, --verbose   Enable verbose output
+  -f, --file=     Specify an alternative Efs2file (default: ./Efs2file)
+                  (default: ./Efs2file)
+  -i, --key=      Specify an SSH Private key to use (default: ~/.ssh/id_rsa)
+  -p, --parallel  Execute tasks in parallel (default: false)
+  -d, --dryrun    Print tasks to be executed without actually executing any
+                  tasks
+      --port=     Define an alternate SSH Port (default: 22) (default: 22)
+
+Help Options:
+  -h, --help      Show this help message
 ```

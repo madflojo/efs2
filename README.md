@@ -2,6 +2,14 @@
 
 Wish you could go back and just use stupid scripts to setup and configure your servers? Well now you can! **Effing Scripts 2** is a common sense configuration management tool that is loosly inspired by [fss](https://github.com/brandonhilkert/fucking_shell_scripts).
 
+## Installation
+
+Installing with Go is as easy as `go get`.
+
+```sh
+go get -u github.com/madflojo/efs2 
+```
+
 ## Getting started
 
 Getting started with Effing Scripts 2 is as easy as creating an `Efs2file`. This file will define what scripts and commands you wish to run on the target hosts. Let's take a look at an example file.

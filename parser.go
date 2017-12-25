@@ -61,6 +61,7 @@ func parseFile(f string) ([]*task, error) {
 
 		if putRe.MatchString(l) {
 			t.task = l
+			t.file.active = true
 
 			p := strings.Split(l, " ")
 			if len(p) != 4 {
@@ -70,7 +71,7 @@ func parseFile(f string) ([]*task, error) {
 			t.file.source = p[1]
 			t.file.dest = p[2]
 
-			m, err := strconv.Atoi(p[3])
+			m, err := strconv.ParseUint(p[3], 8, 32)
 			if err != nil {
 				return tasks, fmt.Errorf("Could not convert value to integer on line %d - %s", lc, p[3])
 			}

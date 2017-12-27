@@ -13,14 +13,14 @@ import (
 // Parse will return a slice of tasks built from a Efs2file
 func Parse(f string) ([]*task, error) {
 	var tasks []*task
-	var s *bufio.Scanner
+  var s *bufio.Scanner
 
 	if f == "-" {
 		s = bufio.NewScanner(os.Stdin)
 	} else {
 		fh, err := os.Open(f)
 		if err != nil {
-			return tasks, fmt.Errorf("Could not read Efs2file - %s", err)
+			return nil, fmt.Errorf("Could not read Efs2file - %s", err)
 		}
 		defer fh.Close()
 		s = bufio.NewScanner(fh)

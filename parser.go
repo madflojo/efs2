@@ -10,7 +10,8 @@ import (
 	"time"
 )
 
-func parseFile(f string) ([]*task, error) {
+// Parse will return a slice of tasks built from a Efs2file
+func Parse(f string) ([]*task, error) {
 	var tasks []*task
 	var s *bufio.Scanner
 
@@ -47,7 +48,7 @@ func parseFile(f string) ([]*task, error) {
 			}
 
 			if c[1] == "SCRIPT" {
-				dest := "/tmp/" + tempFilename()
+				dest := "/tmp/" + TmpFn()
 				t.command.cmd = dest + "; rm " + dest
 				t.command.active = true
 				t.file.active = true
@@ -87,7 +88,8 @@ func parseFile(f string) ([]*task, error) {
 	return tasks, nil
 }
 
-func tempFilename() string {
+// tmpFn will generate a temporary filename
+func TmpFn() string {
 	// Snagged from ioutil.TempFile
 	r := uint32(time.Now().UnixNano() + int64(os.Getpid()))
 	r = r*1664525 + 1013904223

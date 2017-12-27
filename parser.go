@@ -13,7 +13,7 @@ import (
 // Parse will return a slice of tasks built from a Efs2file
 func Parse(f string) ([]*task, error) {
 	var tasks []*task
-  var s *bufio.Scanner
+	var s *bufio.Scanner
 
 	if f == "-" {
 		s = bufio.NewScanner(os.Stdin)

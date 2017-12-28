@@ -3,8 +3,14 @@ os:
   - linux
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
+before_install:
+  - sudo apt-get install openssh-server
+  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
+  - cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
 script:
   - gofmt -l ./
   - go vet -v
   - go test -v
   - go build
+  - go install
+  - efs2 -h

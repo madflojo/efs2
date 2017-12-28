@@ -4,7 +4,7 @@ os:
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
 script:
-  - test -z "$(gofmt -l ./)"
-  - test -z "$(go vet -v ./...)"
-  - go test ./...
+  - gofmt -l ./
+  - go vet -v
+  - go test -v
   - go build

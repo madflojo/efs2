@@ -88,7 +88,7 @@ func Parse(f string) ([]*task, error) {
 	return tasks, nil
 }
 
-// tmpFn will generate a temporary filename
+// TmpFn will generate a temporary filename
 func TmpFn() string {
 	// Snagged from ioutil.TempFile
 	r := uint32(time.Now().UnixNano() + int64(os.Getpid()))

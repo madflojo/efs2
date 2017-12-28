@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 )
 
-// Puts a local file to a remote destination over SSH
+// Put will put a local file to a remote destination over SSH
 func Put(file *file, h string, conf *ssh.ClientConfig) error {
 	c, err := ssh.Dial("tcp", h, conf)
 	if err != nil {

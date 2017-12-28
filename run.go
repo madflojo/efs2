@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Executes a remote command over ssh
+// Run executes a remote command over ssh
 func Run(task *command, h string, conf *ssh.ClientConfig) error {
 	c, err := ssh.Dial("tcp", h, conf)
 	if err != nil {

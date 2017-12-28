@@ -1,0 +1,10 @@
+language: go
+os:
+  - linux
+env:
+  - "PATH=/home/travis/gopath/bin:$PATH"
+script:
+  - test -z "$(gofmt -l ./)"
+  - test -z "$(go vet -v ./...)"
+  - go test ./...
+  - go build

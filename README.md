@@ -14,7 +14,7 @@ Installation with Go is as easy as running `go get`.
 go get -u github.com/madflojo/efs2
 ```
 
-Binary releases are coming!
+Binary releases are [available](https://github.com/madflojo/efs2/releases).
 
 ## Creating an `Efs2file`
 

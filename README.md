@@ -72,4 +72,4 @@ $ efs2 host1.example.com host2.example.com
 
 * Directory support for `PUT`
 * Example `Efs2file`s
-* Binary creation and packaging for the masses
+* Packaging for common OS distribution channels

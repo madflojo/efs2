@@ -56,7 +56,7 @@ func Test_initSSH(t *testing.T) {
 }
 
 func Test_readKeyfile_NoFile(t *testing.T) {
-	_, err := readKeyfile("/nothing")
+	_, err := readKeyfile("/nothing", []byte(""))
 	if err == nil {
 		t.Errorf("readKeyfile did not return the expected error, returned nil")
 	}
@@ -69,7 +69,21 @@ func Test_readKeyfile(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error creating test keyfile")
 	}
-	_, err = readKeyfile(f)
+	_, err = readKeyfile(f, []byte(""))
+	_ = os.Remove(f)
+	if err != nil {
+		t.Errorf("readKeyfile returned an unexpected error - %s", err)
+	}
+}
+
+func Test_readKeyfile_EncryptedKey(t *testing.T) {
+	f := "/tmp/key"
+	b := []byte("-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,63266DE5294240B21E5A818E0D25F1C0\n\nBTgrcNRi//YmOg9RG2kWxs66NJVlIsduaUTur6yzb4uwdCgzfpN6BEZhJH+7Xa8m\ng0ap5V3N1rSrUGqQHNqKK/74cvZ7hiOGZH2v3l0k3eVyNrEphohMjEis3h6oFgAR\nUhWMlvXglIkD+VvjXzXMjzNDw8cLhDKKkULMb9qpwXz30Z5DWG4CpPSOr4U8pmAE\ndHrUT8J9jkxxyOU75mBq+Y/q7CuMn84z+f2z9KfYTiNZL5RbrFwh8zp775hP+QUu\n80LzpxiLgbKWpbo1+VKZ3KEMq7wpdc0JFyuxA4gjZhHLXA6Jo6YBtYNwzFcBP/hi\njtcU5cG/0qdtQAkfffD2IOpLApwCCaL8FQdYtBfsq99uL370zrdl9HVnY7jxqccb\nCPxwamsesNCYRQ3aIK2LoY+aEM6Q1/o+CCnbpdbMC6lFvCBSkl5qw3m6aGOflPv4\nYq855biENT5IRXi4J92M0m1EYmwGo/FXd8TmP2UImHfIhUuqr6G+zuFH4PUIASZL\nn2aiX9BT5zaf4OB9ODwPjm2ZtPd9aD2/inE+d2yaUWeLgbkcCz7FnbprLynXmnu7\nuVBo3YyMnaqZRp7YWgkINHwn0D2rt8kjDYJVpz/AOCM2PrCqrd8afk1bbUNOS78Z\nbQ15BjLYH1lTuqjsJajYzHtyRz6/RLyCtV9rxRcY/YP7HbxYMUhMregIYht3/0nZ\nTIY7p+yZvppcVVOLXWdPaf8fvv/017BXgSfxkb3XNuc2opOQTW07NLqhGfxVm0JZ\nyfU0vs2/K4vQpkAMjzAoqWxrMBPpa9ZXoib0u3jBow+2n/pIzCDuCTewo9RZ14QX\nwpH1xcDbngxkCbEypZLxmeyBAkRL+wO0Mep/wH/3GBWmFT0lZei9IDAfOd8GL3NT\nZjaKZnYSE467OWvO2zjgn8rfIymeWRVSbKFupQGS5y6JTW3ePGFzvlyD5r5taoWy\nuxdLxvmOW49L0vallA84zts1yYNg/U0LPCfMrFv+VV/QUsBPHnwknBl3f88OPaBO\n88Sh/miXXm3OqJ890YPhd0XnXambdYMR7pjO+7SpHA0BgHbwFbQairTSVierbelm\nsXyHp5N7wpVoud6mWd/2SI7U02teXQGcZp/bsOAdaOMSJdKS8TCdsptzLnkqls32\n+CwfN8qMS0GOimbImjX+vY84sPcwqMYOw0lPMbApLvKJaZP6iFBbw6BeBI18HTdS\n2rBqDmUVX7Go6j4R6p1TGrdK68o8UpeeqjmNSvSfmzu4MM/4+uuiBbkCd8JYR1VG\nkRAcQ5Vg7HwuiU3pOCrCfp9yLTTqSxX6wE2YR3j6f0lfJBTwhmPYjjJer+oIRpLc\nMxUlD9wxHCF/WYifihnlzdV8kuminj05+sbrNSUpff9S0N42MCEU/TzFHppVEwIc\nCVzWM2zwEADu1ipMamQ+jU2a49t8F0guD6PaWR6C3KGAjrJF8FUEwvWqhuoLQpi2\nIWc7QQA1eNho50OSbrbFwGGBs50PblAuihZSJNXqlaSiAxa5ydNzebP7ap8ppFd8\nYgHSCglYcXyPhtcEH9x4ySPSt13b60OIH3OPW311QuVDj/VWbYM2Jlfb8hKohxRk\n-----END RSA PRIVATE KEY-----\n")
+	err := ioutil.WriteFile(f, b, 0644)
+	if err != nil {
+		t.Errorf("Error creating test keyfile")
+	}
+	_, err = readKeyfile(f, []byte("testingisfun"))
 	_ = os.Remove(f)
 	if err != nil {
 		t.Errorf("readKeyfile returned an unexpected error - %s", err)

@@ -8,11 +8,14 @@ import (
 )
 
 // readKeyfile will read a private key from file and return an ssh.Signer object
-func readKeyfile(file string) (ssh.Signer, error) {
+func readKeyfile(file string, pass []byte) (ssh.Signer, error) {
 	var key ssh.Signer
 	b, err := ioutil.ReadFile(file)
 	if err != nil {
 		return key, err
+	}
+	if len(pass) >= 1 {
+		return ssh.ParsePrivateKeyWithPassphrase(b, pass)
 	}
 	return ssh.ParsePrivateKey(b)
 }
@@ -36,7 +39,7 @@ func initSSH(opts options) (*ssh.ClientConfig, error) {
 		keyfile = opts.Keyfile
 	}
 
-	key, err := readKeyfile(keyfile)
+	key, err := readKeyfile(keyfile, opts.Passphrase)
 	if err != nil {
 		return sshConf, fmt.Errorf("Unable to read private key file - %s", err)
 	}

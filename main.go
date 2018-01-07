@@ -21,19 +21,25 @@ func main() {
 
 	var sshConf *ssh.ClientConfig
 	sshConf, err = initSSH(opts)
-	passError := regexp.MustCompile(`.*decode encrypted private keys$`)
-	if passError.MatchString(err.Error()) {
-		fmt.Printf("Enter Private Key Passphrase: ")
-		opts.Passphrase, err = gopass.GetPasswd()
-		if err != nil {
-			color.Red("Unable to get Private key Passphrase - %s", err)
+	if err != nil {
+		// Check if error is Key Passphrase
+		passError := regexp.MustCompile(`.*decode encrypted private keys$`)
+		if passError.MatchString(err.Error()) {
+			fmt.Printf("Enter Private Key Passphrase: ")
+			opts.Passphrase, err = gopass.GetPasswd()
+			if err != nil {
+				color.Red("Unable to get Private key Passphrase - %s", err)
+				os.Exit(1)
+			}
+			sshConf, err = initSSH(opts)
+			if err != nil {
+				color.Red("Unable to setup SSH client configuration - %s", err)
+				os.Exit(1)
+			}
+		} else {
+			color.Red("Unable to setup SSH client configuration - %s", err)
 			os.Exit(1)
 		}
-		sshConf, err = initSSH(opts)
-	}
-	if err != nil {
-		color.Red("Unable to setup SSH client configuration - %s", err)
-		os.Exit(1)
 	}
 
 	tasks, err := Parse(opts.Efs2file)

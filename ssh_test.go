@@ -56,7 +56,7 @@ func Test_initSSH(t *testing.T) {
 }
 
 func Test_readKeyfile_NoFile(t *testing.T) {
-	_, err := readKeyfile("/nothing")
+	_, err := readKeyfile("/nothing", []byte(""))
 	if err == nil {
 		t.Errorf("readKeyfile did not return the expected error, returned nil")
 	}
@@ -69,7 +69,7 @@ func Test_readKeyfile(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error creating test keyfile")
 	}
-	_, err = readKeyfile(f)
+	_, err = readKeyfile(f, []byte(""))
 	_ = os.Remove(f)
 	if err != nil {
 		t.Errorf("readKeyfile returned an unexpected error - %s", err)

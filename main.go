@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/fatih/color"
+	"github.com/howeyc/gopass"
 	"github.com/jessevdk/go-flags"
 	"golang.org/x/crypto/ssh"
 	"os"
+	"regexp"
 	"sync"
 )
 
@@ -16,7 +19,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	sshConf, err := initSSH(opts)
+	var sshConf *ssh.ClientConfig
+	sshConf, err = initSSH(opts)
+	passError := regexp.MustCompile(`.*decode encrypted private keys$`)
+	if passError.MatchString(err.Error()) {
+		fmt.Printf("Enter Private Key Passphrase: ")
+		opts.Passphrase, err = gopass.GetPasswd()
+		if err != nil {
+			color.Red("Unable to get Private key Passphrase - %s", err)
+			os.Exit(1)
+		}
+		sshConf, err = initSSH(opts)
+	}
 	if err != nil {
 		color.Red("Unable to setup SSH client configuration - %s", err)
 		os.Exit(1)

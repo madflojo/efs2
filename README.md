@@ -71,7 +71,7 @@ $ efs2 host1.example.com host2.example.com
 ## TODO
 
 * Directory support for `PUT`
-* Add Password Authentication
+* Password Authentication
 * Packaging for common OS distribution channels
 
 ## `Efs2file`s In the wild

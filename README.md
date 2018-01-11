@@ -71,5 +71,9 @@ $ efs2 host1.example.com host2.example.com
 ## TODO
 
 * Directory support for `PUT`
-* Example `Efs2file`s
+* Password Authentication
 * Packaging for common OS distribution channels
+
+## `Efs2file`s In the wild
+
+* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server 

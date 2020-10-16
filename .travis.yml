@@ -11,7 +11,7 @@ before_install:
 script:
   - gofmt -l ./
   - go vet -v
-  - go test -v
-  - go build
-  - go install
+  - make tests clean
+  - make build
+  - make install
   - efs2 -v localhost

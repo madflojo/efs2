@@ -1,0 +1,43 @@
+version: "2.1"
+services:
+  openssh-server:
+    image: linuxserver/openssh-server
+    hostname: openssh-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=GMT
+      - PUBLIC_KEY_FILE=/config/testkey.pub
+      - SUDO_ACCESS=true
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=testing
+      - USER_NAME=test
+    volumes:
+      - ./testdata:/config
+  openssh-server-2:
+    image: linuxserver/openssh-server
+    hostname: openssh-server-2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=GMT
+      - PUBLIC_KEY_FILE=/config/testkey.pub
+      - SUDO_ACCESS=true
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=testing
+      - USER_NAME=test
+    volumes:
+      - ./testdata:/config
+  tests:
+    build: .
+    working_dir: /go/src/github.com/madflojo/efs2
+    entrypoint: go test -v -covermode=count -coverprofile=/tmp/coverage/coverage.out ./...
+    volumes:
+      - ./coverage:/tmp/coverage
+    depends_on:
+      - openssh-server
+      - openssh-server-2
+
+volumes:
+  coverage:
+  testdata:

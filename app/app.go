@@ -86,19 +86,7 @@ func Run(cfg config.Config) error {
 	}
 
 	// Fixup Hosts
-	var hh []string
-	for _, h := range cfg.Hosts {
-		if hasPort.MatchString(h) {
-			hh = append(hh, h)
-			continue
-		}
-		if cfg.Port == "" {
-			hh = append(hh, h+":22")
-			continue
-		}
-		hh = append(hh, h+":"+cfg.Port)
-	}
-	cfg.Hosts = hh
+	cfg.Hosts = fixUpHosts(cfg.Hosts, cfg.Port)
 
 	// Execute
 	var wg sync.WaitGroup
@@ -151,4 +139,21 @@ func Run(cfg config.Config) error {
 		return fmt.Errorf("Execution failed with %d errors", errCount)
 	}
 	return nil
+}
+
+func fixUpHosts(hosts []string, port string) []string {
+	// Fixup Hosts
+	var hh []string
+	for _, h := range hosts {
+		if hasPort.MatchString(h) {
+			hh = append(hh, h)
+			continue
+		}
+		if port == "" {
+			hh = append(hh, h+":22")
+			continue
+		}
+		hh = append(hh, h+":"+port)
+	}
+	return hh
 }

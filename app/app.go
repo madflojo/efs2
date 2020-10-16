@@ -12,11 +12,6 @@ import (
 	"sync"
 )
 
-// Common Errors
-var (
-	ErrShutdown = fmt.Errorf("application was shutdown normally")
-)
-
 // Encrypted Key Error
 var isPassErr = regexp.MustCompile(`.*decode encrypted private keys$`)
 

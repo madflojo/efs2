@@ -1,63 +1,51 @@
-# Effing Shell Scripts 2
+# Efs2
 
-Are you hating Puppet right now? Wish you could dump these complex tools like CFEngine, Chef, Puppet, Ansible and Salt? Want to go back to using stupid scripts!? Now you can!
+Don't you wish you could configure a server as easily as creating a Docker image? Meet Efs2, A dead simple configuration management tool that is powered by stupid shell scripts.
 
-**Effing Shell Scripts 2** is a common sense remote command execution tool inspired by [fss](https://github.com/brandonhilkert/fucking_shell_scripts) and written in **Go**.
+Efs2 is an idea to combine the stupid shell scripts philosophy of [fss](https://github.com/brandonhilkert/fucking_shell_scripts) with the simplicity of a `Dockerfile`.
 
-Let's get started!
+## Efs2 by Example: NGINX
 
-## Installation
+Let's take a look at how easy it is to configure an NGINX server.
 
-Installation with Go is as easy as running `go get`.
+### The Efs2file
 
-```sh
-go get -u github.com/madflojo/efs2
-```
+An `Efs2file` powers efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
 
-Binary releases are [available](https://github.com/madflojo/efs2/releases).
-
-## Creating an `Efs2file`
-
-Rather than using a `yaml` based desired state structure. Effing Shell Scripts 2 tries to keep things simple. Just create a `Efs2file` and define what files to copy and scripts/commands to run.
-
-Let's take a look at an example file.
-
-```
-# Setup a simple mailserver
+```Dockerfile
+# Install and Configure NGINX
 
 # Run apt-get update
-RUN CMD apt-get update --fix-missing && apt-get -y upgrade
+RUN apt-get update --fix-missing && apt-get -y upgrade
 
-# PUT the main.cf file to the remote host
-PUT files/main.cf /etc/postfix/main.cf 0644
+# Install nginx
+RUN apt-get install nginx
 
-# Copy the setup_postfix.sh script to the remote host and then execute it
-RUN SCRIPT setup_postfix.sh
+# Deploy Config files
+PUT nginx.conf /etc/nginx/nginx.conf 0644
+PUT example.com /etc/nginx/sites-available/example.com 0644
 
-# Execute a one liner command on the remote host
-RUN CMD ps -elf | grep -q postfix
+# Create a Symlink
+RUN ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+
+# Restart NGINX
+RUN systemctl restart nginx
 ```
 
-The order of this file, is the order these instructions are executed. Allowing you to skip the hassle of the complex dependencies other tools need.
+The above `Efs2file` showcases how simple the Efs2 instructions are. Our NGINX server is configured with two simple instructions `RUN` and `PUT`.
 
-### Available `Efs2file` Instructions
+The `RUN` instruction is simple; it executes whatever command you provide. The `PUT` instruction uploads files. That's it, that's all the instructions included with Efs2. Simple but effective.
 
-Effing Shell Scripts 2 is a simple tool for simple tasks. As such, the `Efs2file` has only two instructions; `PUT` and `RUN`.
+### Remote Execution
 
-- `PUT` - Copy the specified file to the remote host
-- `RUN` - Execute a script or command on the remote host
-  - `SCRIPT` - Copy the specified script to the remote host and execute it
-  - `CMD` - Execute the specified command on the remote host
-
-## Executing `efs2`
-
-Once defined, the `Efs2file` can be executed against any number of target hosts.
+Efs2 uses SSH to execute the instructions specified within the `Efs2file`. Just run the Efs2 command, followed by the target hosts.
 
 ```sh
 $ efs2 host1.example.com host2.example.com
 ```
 
-**Available command line options:**
+#### Command Line Options
+
 ```
 -v, --verbose   Enable verbose output
 -f, --file=     Specify an alternative Efs2file (default: ./Efs2file)
@@ -68,12 +56,31 @@ $ efs2 host1.example.com host2.example.com
 -u, --user=     Remote host username (default: current user)
 ```
 
+## Installation
+
+Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
+
+It is also possible to install Efs2 with Go.
+
+```sh
+go get -u github.com/madflojo/efs2
+```
+
+## Efs2file's In the wild
+
+* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server
+
+Add your examples above!
+
 ## TODO
 
-* Directory support for `PUT`
-* Password Authentication
-* Packaging for common OS distribution channels
+* Recursive Directory support for `PUT`
+* Password Authentication support
+* Packaging for brew
+* Templating for uploads
 
-## `Efs2file`s In the wild
+## Contributing
 
-* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server 
+Thank you for your interest in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued.
+
+Please reference our [Contributing Guide](CONTRIBUTING.md) for details.

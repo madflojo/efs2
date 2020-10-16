@@ -40,7 +40,7 @@ The `RUN` instruction is simple; it executes whatever command you provide. The `
 
 Efs2 uses SSH to execute the instructions specified within the `Efs2file`. Just run the Efs2 command, followed by the target hosts.
 
-```sh
+```console
 $ efs2 host1.example.com host2.example.com
 ```
 
@@ -62,7 +62,7 @@ Efs2 is simple to install, with the fastest method being to download one of our 
 
 It is also possible to install Efs2 with Go.
 
-```sh
+```console
 go get -u github.com/madflojo/efs2
 ```
 

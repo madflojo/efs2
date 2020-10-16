@@ -4,10 +4,26 @@ Thank you for your interest in helping develop Efs2. The time, skills, and persp
 
 ## How can I contribute?
 
-Bugs, Design Proposals, Feature Requests, and Questions are all welcome and can be submitted by creating a [Github Issue](https://github.com/madflojo/efs2/issues/new/choose) using one of the templates provided. Please provide as much detail as you can.
+Bugs, Design Proposals, Feature Requests, and Questions are all welcome by creating a [Github Issue](https://github.com/madflojo/efs2/issues/new/choose) using one of the templates provided. Please provide as much detail as you can.
 
-Code contributions are welcome as well! In an effort to keep this project tidy, please:
+Code contributions are welcome as well! To keep this project tidy, please:
+
 - Use `go mod` to install and lock dependencies
 - Use `gofmt` to format code and tests
 - Run `go vet -v ./...` to check for any inadvertent suspicious code
-- Write and run unit tests when they make sense using `make test`
+- Write and run unit tests using `make test`
+
+### Available Makefile commands
+
+Run tests
+
+```console
+$ make test
+```
+
+Clean up environment
+
+```console
+$ make clean
+```
+

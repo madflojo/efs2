@@ -23,14 +23,15 @@ var hasPort = regexp.MustCompile(`.*:\d*`)
 // Run is the primary execution function for this application.
 func Run(cfg config.Config) error {
 	var clientCfg ssh.Config
+	var err error
 
-	if cfg.Verbose {
+	if cfg.Verbose && !cfg.Quiet {
 		color.Yellow("SSH User: %s", cfg.User)
 		color.Yellow("Key Path: %s", cfg.KeyFile)
 	}
 
 	// Setup SSH Config
-	clientCfg, err := ssh.ReadKeyFile(cfg.KeyFile, cfg.Passphrase)
+	clientCfg, err = ssh.ReadKeyFile(cfg.KeyFile, cfg.Passphrase)
 	if err != nil {
 		if !isPassErr.MatchString(err.Error()) {
 			return fmt.Errorf("Unable to obtain Key Passphrase - %s", err)
@@ -51,7 +52,7 @@ func Run(cfg config.Config) error {
 		cfg.Efs2File = "./Efs2file"
 	}
 
-	if cfg.Verbose {
+	if cfg.Verbose && !cfg.Quiet {
 		color.Yellow("Efs2file Path: %s", cfg.Efs2File)
 	}
 
@@ -76,11 +77,15 @@ func Run(cfg config.Config) error {
 			sh, err := ssh.Dial(c)
 			if err != nil {
 				errCount = errCount + 1
-				color.Red("%s: Error connecting to host - %s", h, err)
+				if !cfg.Quiet {
+					color.Red("%s: Error connecting to host - %s", h, err)
+				}
 				return
 			}
 			for i, t := range tasks {
-				color.Blue("%s: Executing Task %d - %s", h, i, t.Task)
+				if !cfg.Quiet {
+					color.Blue("%s: Executing Task %d - %s", h, i, t.Task)
+				}
 				if cfg.DryRun {
 					continue
 				}
@@ -88,19 +93,27 @@ func Run(cfg config.Config) error {
 					err := sh.Put(t.File)
 					if err != nil {
 						errCount = errCount + 1
-						color.Red("%s: Error uploading file - %s", h, err)
+						if !cfg.Quiet {
+							color.Red("%s: Error uploading file - %s", h, err)
+						}
 						return
 					}
-					color.Blue("%s: File upload successful", h)
+					if !cfg.Quiet {
+						color.Blue("%s: File upload successful", h)
+					}
 				}
 				if t.Command.Cmd != "" {
 					r, err := sh.Run(t.Command)
 					if err != nil {
 						errCount = errCount + 1
-						color.Red("%s: Error executing command - %s", h, err)
+						if !cfg.Quiet {
+							color.Red("%s: Error executing command - %s", h, err)
+						}
 						return
 					}
-					color.Blue("%s: %s", h, r)
+					if !cfg.Quiet {
+						color.Blue("%s: %s", h, r)
+					}
 				}
 			}
 

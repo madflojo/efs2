@@ -14,6 +14,9 @@ type Config struct {
 	// Verbose if set to true, will enable verbose output of command execution.
 	Verbose bool
 
+	// Quiet if set to true, will silence all output and focus only on exit codes.
+	Quiet bool
+
 	// Efs2File specifies the location of the Efs2File to execute. The default value is the current directory.
 	Efs2File string
 

@@ -45,6 +45,8 @@ func Parse(f string) ([]ssh.Task, error) {
 	isPut := regexp.MustCompile(`^PUT .* \d{3,4}$`)
 	// Matches Comments
 	isComment := regexp.MustCompile(`^#.*`)
+	// Matches Comments
+	isEmpty := regexp.MustCompile(`^$`)
 
 	lc := 0
 	for s.Scan() {
@@ -53,7 +55,15 @@ func Parse(f string) ([]ssh.Task, error) {
 		l := strings.TrimSpace(s.Text())
 		c := strings.Split(l, " ")
 
-		if !isRun.MatchString(l) && !isOldRun.MatchString(l) && !isPut.MatchString(l) && !isComment.MatchString(l) {
+		if isComment.MatchString(l) {
+			continue
+		}
+
+		if isEmpty.MatchString(l) {
+			continue
+		}
+
+		if !isRun.MatchString(l) && !isOldRun.MatchString(l) && !isPut.MatchString(l) {
 			return tasks, fmt.Errorf("Unable to parse Efs2file line %s", l)
 		}
 

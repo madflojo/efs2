@@ -60,6 +60,20 @@ func TestParsing(t *testing.T) {
 		instructions: 1,
 	}
 	cc = append(cc, c)
+	c = testCase{
+		name:         "Empty Lines",
+		data:         []byte("RUN CMD ls -la\n\nRUN SCRIPT /test.sh"),
+		pass:         true,
+		instructions: 2,
+	}
+	cc = append(cc, c)
+	c = testCase{
+		name:         "Comments",
+		data:         []byte("# This is a Comment\nRUN CMD ls -la\n"),
+		pass:         true,
+		instructions: 1,
+	}
+	cc = append(cc, c)
 
 	// Execute Tests in a bunch of sub-tests
 	for _, x := range cc {

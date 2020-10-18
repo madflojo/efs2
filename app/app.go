@@ -1,3 +1,6 @@
+/*
+Package app is the main runtime package for Efs2. This package holds all of the logging and task execution controls.
+*/
 package app
 
 import (
@@ -7,7 +10,6 @@ import (
 	"github.com/madflojo/efs2/config"
 	"github.com/madflojo/efs2/parser"
 	"github.com/madflojo/efs2/ssh"
-	"os/user"
 	"regexp"
 	"sync"
 )
@@ -18,33 +20,12 @@ var isPassErr = regexp.MustCompile(`.*decode encrypted private keys$`)
 // Has a port defined
 var hasPort = regexp.MustCompile(`.*:\d*`)
 
+// Run is the primary execution function for this application.
 func Run(cfg config.Config) error {
 	var clientCfg ssh.Config
 
-	// Check if user is defined
-	if cfg.User == "" {
-		usr, err := user.Current()
-		if err != nil {
-			return fmt.Errorf("Unable to determine user details - %s", err)
-		}
-		cfg.User = usr.Username
-	}
-
 	if cfg.Verbose {
 		color.Yellow("SSH User: %s", cfg.User)
-	}
-
-	// Check if Keyfile is defined
-	if cfg.KeyFile == "" {
-		usr, err := user.Lookup(cfg.User)
-		if err != nil {
-			return fmt.Errorf("Unable to determine key file location - %s", err)
-		}
-
-		cfg.KeyFile = usr.HomeDir + "/.ssh/id_rsa"
-	}
-
-	if cfg.Verbose {
 		color.Yellow("Key Path: %s", cfg.KeyFile)
 	}
 

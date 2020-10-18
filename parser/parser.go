@@ -1,4 +1,12 @@
-// Package parser is an Efs2file parser. This package provides the ability to read an Efs2file and convert it into Efs2 tasks.
+/*
+Package parser is a parser for Efs2files. With this parser, you can read an Efs2file and convert the instructions within it into tasks. This parser is also able to read from standard in.
+
+  tasks, err := Parser("/path/to/Efs2file")
+  if err != nil {
+    // do stuff
+  }
+
+*/
 package parser
 
 import (
@@ -12,7 +20,7 @@ import (
 	"time"
 )
 
-// Parse will open and read the specified Efs2file. It will then return a slice of tasks built from the file.
+// Parser will read the file provided and parse it for Efs2 instructions. If a line within the file does not match the Efs2 pre-defined patterns, the whole file parsing will return an error. If "-" is provided as the filename, the Parser will read input from Standard In.
 func Parse(f string) ([]ssh.Task, error) {
 	var tasks []ssh.Task
 	var s *bufio.Scanner
@@ -105,7 +113,7 @@ func Parse(f string) ([]ssh.Task, error) {
 	return tasks, nil
 }
 
-// TmpFn will generate a temporary filename
+// TmpFn will generate a temporary filename. This function is useful for testing and called internally during parsing to name remote files.
 func TmpFn() string {
 	// Snagged from ioutil.TempFile
 	r := uint32(time.Now().UnixNano() + int64(os.Getpid()))

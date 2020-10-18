@@ -4,6 +4,9 @@ os:
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
 before_install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+  - go mod tidy
   - sudo apt-get install openssh-server
   - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
   - cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys

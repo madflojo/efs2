@@ -1,3 +1,35 @@
+/*
+Package ssh provides users with a simple interface for remote execution over SSH. While this package is for Efs2 it could easily be imported and used by others.
+
+  // Read a Key File
+  key, err := ssh.ReadKeyFile("~/.ssh/id_rsa", "aPass")
+  if err != nil {
+    // do something
+  }
+
+  // Dial the remote host
+  conn, err := ssh.Dial(ssh.Config{
+    Host: "example.com:22",
+    User: "example",
+    Key:  key,
+  })
+  if err != nil {
+    // do something
+  }
+
+  // Upload a File
+  err = conn.Put(ssh.File{...})
+  if err != nil {
+    // do something
+  }
+
+  // Run a Command
+  output, err := conn.Run(ssh.Command{...})
+  if err != nil {
+    // do something
+  }
+
+*/
 package ssh
 
 import (
@@ -8,37 +40,58 @@ import (
 	"os"
 )
 
+// Conn is an SSH connection the internally holds both an SSH and SFTP session.
 type Conn struct {
-	client     *ssh.Client
+	// client is an SSH client connection. This connection is the underlying SSH and SFTP TCP Client.
+	client *ssh.Client
+
+	// sftpClient is an SFTP upgraded SSH client. This client is used to perform file-based operations.
 	sftpClient *sftp.Client
 }
 
+// Config provides SSH client configuration details to the Dial function. This configuration offers items such as hostname, port, username, and SSH Keys to use for authentication.
 type Config struct {
-	Host          string
-	User          string
-	Passphrase    string
-	IgnoreHostKey bool
-	Key           ssh.Signer
+	// Host contains the remote SSH host address in a hostname:port format. If no port is specified, the Dial function will return an error.
+	Host string
+
+	// User contains the remote host's username to use for authentication and must not be left blank.
+	User string
+
+	// Key provides an SSH key to use for authentication. This key is the private key and requires the public key to be pre-pushed to the remote host for authentication to work.
+	Key ssh.Signer
 }
 
+// Task is a wrapper structure used during parsing of Efs2 files. Within this structure contains SSH command and file structures.
 type Task struct {
-	Task    string
+	// Task is the original instruction used to create the task.
+	Task string
+
+	// Command is a command structure that provides command execution instructions.
 	Command Command
-	File    File
+
+	// File is a file structure that provides file upload instructions.
+	File File
 }
 
+// Command is a structure that holds details for individual commands that execute remotely.
 type Command struct {
+	// Cmd is the single line shell command for execution.
 	Cmd string
 }
 
+// File is a structure that holds the details required for uploading files.
 type File struct {
-	Source      string
+	// Source is the full path to the source file to be uploaded.
+	Source string
+
+	// Destination is the full path location of the destination filename.
 	Destination string
-	Mode        os.FileMode
+
+	// Mode is the file permissions to be set upon upload.
+	Mode os.FileMode
 }
 
-// Dial will open a new SSH session to the specified host. This session can be used to perform
-// actions or upload files.
+// Dial will open an SSH connection to the configured remote host. The returned connection can then upload files or execute commands.
 func Dial(c Config) (*Conn, error) {
 	var err error
 	s := &Conn{}
@@ -67,11 +120,13 @@ func Dial(c Config) (*Conn, error) {
 	return s, nil
 }
 
+// Close will close the open SSH connection cleaning up any lingering executions.
 func (c *Conn) Close() {
 	defer c.sftpClient.Close()
 	defer c.client.Close()
 }
 
+// Put will upload the specified file with the provided destination path and permissions. Currently, this function does not support directories. Each execution is a single file.
 func (c *Conn) Put(f File) error {
 	fh, err := ioutil.ReadFile(f.Source)
 	if err != nil {
@@ -97,6 +152,7 @@ func (c *Conn) Put(f File) error {
 	return nil
 }
 
+// Run will execute the specified file returning both standard output and standard error as a combined value. Any error in execution will return an error, even if the command is partially successful.
 func (c *Conn) Run(t Command) ([]byte, error) {
 	// Create an SSH Channel
 	s, err := c.client.NewSession()
@@ -111,7 +167,7 @@ func (c *Conn) Run(t Command) ([]byte, error) {
 	return r, nil
 }
 
-// ReadKeyFile will open an SSH keyfile and return an SSH Config for use
+// ReadKeyFile will open and load the SSH key from the provided file. If included, the password will allow this function to decrypt SSH keys.
 func ReadKeyFile(file string, pass []byte) (Config, error) {
 	var cfg Config
 	b, err := ioutil.ReadFile(file)

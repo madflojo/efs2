@@ -120,7 +120,7 @@ func TestParsingTasks(t *testing.T) {
 	}
 
 	if len(tasks) != 4 {
-		t.Errorf("Parsing error occured when calling Parse, expected 4 tasks, got %d", len(tasks))
+		t.Errorf("Parsing error occurred when calling Parse, expected 4 tasks, got %d", len(tasks))
 	}
 
 	tsk := tasks[0]

@@ -11,7 +11,7 @@ func TestReadKeyFile(t *testing.T) {
 	t.Run("No File", func(t *testing.T) {
 		_, err := ReadKeyFile("/nothing", []byte(""))
 		if err == nil {
-			t.Errorf("Did not receive an error with none existant key file")
+			t.Errorf("Did not receive an error with none existent key file")
 		}
 	})
 

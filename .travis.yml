@@ -22,3 +22,5 @@ script:
   - make build
   - make install
   - efs2 -v localhost
+after_success:
+  - goveralls -coverprofile=coverage/coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-// Parser will read the file provided and parse it for Efs2 instructions. If a line within the file does not match the Efs2 pre-defined patterns, the whole file parsing will return an error. If "-" is provided as the filename, the Parser will read input from Standard In.
+// Parse will read the file provided and parse it for Efs2 instructions. If a line within the file does not match the Efs2 pre-defined patterns, the whole file parsing will return an error. If "-" is provided as the filename, the Parser will read input from Standard In.
 func Parse(f string) ([]ssh.Task, error) {
 	var tasks []ssh.Task
 	var s *bufio.Scanner

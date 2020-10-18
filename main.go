@@ -2,6 +2,25 @@
 Don't you wish you could configure a server as easily as creating a Docker image? Meet Efs2, A dead simple configuration management tool that is powered by stupid shell scripts.
 
 Efs2 is an idea to combine the stupid shell scripts philosophy of fss with the simplicity of a Dockerfile.
+
+	# Install and Configure NGINX
+	
+	# Run apt-get update
+	RUN apt-get update --fix-missing && apt-get -y upgrade
+	
+	# Install nginx
+	RUN apt-get install nginx
+	
+	# Deploy Config files
+	PUT nginx.conf /etc/nginx/nginx.conf 0644
+	PUT example.com /etc/nginx/sites-available/example.com 0644
+	
+	# Create a Symlink
+	RUN ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+	
+	# Restart NGINX
+	RUN systemctl restart nginx
+
 */
 package main
 

@@ -4,7 +4,7 @@ Don't you wish you could configure a server as easily as creating a Docker image
 
 Efs2 is an idea to combine the stupid shell scripts philosophy of [fss](https://github.com/brandonhilkert/fucking_shell_scripts) with the simplicity of a `Dockerfile`.
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/efs2)](https://goreportcard.com/report/github.com/madflojo/efs2) 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/madflojo/efs2)](https://pkg.go.dev/github.com/madflojo/efs2) [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/efs2)](https://goreportcard.com/report/github.com/madflojo/efs2) [![Build Status](https://travis-ci.com/madflojo/efs2.svg?branch=master)](https://travis-ci.com/madflojo/efs2)
 
 ## Efs2 by Example: NGINX
 

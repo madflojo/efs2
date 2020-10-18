@@ -11,6 +11,8 @@ import (
 func TestEfs2(t *testing.T) {
 
 	cfg := config.Config{}
+  cfg.Quiet = true
+  cfg.Verbose = true
 	cfg.KeyFile = "/go/src/github.com/madflojo/efs2/testdata/testkey"
 	cfg.User = "test"
 	cfg.Hosts = []string{"openssh-server:2222"}
@@ -43,6 +45,7 @@ func TestEfs2(t *testing.T) {
 		_ = f.Close()
 		cfg.Efs2File = f.Name()
 		cfg.DryRun = true
+    cfg.Quiet = false
 
 		err = Run(cfg)
 		if err != nil {

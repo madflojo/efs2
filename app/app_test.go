@@ -45,6 +45,7 @@ func TestEfs2(t *testing.T) {
 		_ = f.Close()
 		cfg.Efs2File = f.Name()
 		cfg.DryRun = true
+    cfg.Quiet = false
 
 		err = Run(cfg)
 		if err != nil {

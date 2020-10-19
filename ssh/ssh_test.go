@@ -43,9 +43,16 @@ func TestReadKeyFile(t *testing.T) {
 			t.Errorf("Unexpected error reading key file - %s", err)
 		}
 	})
+
+	t.Run("Broken Key", func(t *testing.T) {
+		_, err := ReadKeyFile("/go/src/github.com/madflojo/efs2/testdata/invalidkey", []byte(""))
+		if err == nil {
+			t.Errorf("Unexpected success reading key file")
+		}
+	})
 }
 
-func TestBadConnections(t *testing.T) {
+func TestConnections(t *testing.T) {
 	t.Run("Invalid Host", func(t *testing.T) {
 		c, err := ReadKeyFile("/go/src/github.com/madflojo/efs2/testdata/testkey-passphrase", []byte("testing"))
 		if err != nil {
@@ -68,10 +75,40 @@ func TestBadConnections(t *testing.T) {
 
 		_, err = Dial(c)
 		if err == nil {
-			t.Errorf("Unexpected success dialing an invalid host")
+			t.Errorf("Unexpected success dialing without a user")
 		}
 
 	})
+
+	t.Run("Wrong Key", func(t *testing.T) {
+		c, err := ReadKeyFile("/go/src/github.com/madflojo/efs2/testdata/wrongkey", []byte(""))
+		if err != nil {
+			t.Errorf("Unexpected error reading key file - %s", err)
+		}
+		c.Host = "openssh-server:2222"
+		c.User = "test"
+
+		_, err = Dial(c)
+		if err == nil {
+			t.Errorf("Unexpected success dialing a wrong key")
+		}
+	})
+
+	t.Run("Password", func(t *testing.T) {
+		c, err := ReadKeyFile("/go/src/github.com/madflojo/efs2/testdata/wrongkey", []byte(""))
+		if err != nil {
+			t.Errorf("Unexpected error reading key file - %s", err)
+		}
+		c.Host = "openssh-server:2222"
+		c.User = "test"
+		c.Password = "testing"
+
+		_, err = Dial(c)
+		if err != nil {
+			t.Errorf("Unexpected error dialing with a password - %s", err)
+		}
+	})
+
 }
 
 func TestDial(t *testing.T) {

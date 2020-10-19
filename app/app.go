@@ -15,7 +15,7 @@ import (
 )
 
 // Encrypted Key Error
-var isPassErr = regexp.MustCompile(`.*decode encrypted private keys$`)
+var isPassErr = regexp.MustCompile(`.*[decode encrypted|protected].*$`)
 
 // Has a port defined
 var hasPort = regexp.MustCompile(`.*:\d*`)
@@ -25,34 +25,45 @@ func Run(cfg config.Config) error {
 	var clientCfg ssh.Config
 	var err error
 
-	if cfg.Verbose && !cfg.Quiet {
-		color.Yellow("SSH User: %s", cfg.User)
-		color.Yellow("Key Path: %s", cfg.KeyFile)
+	// If Password is set
+	if cfg.Password != "" {
+		clientCfg = ssh.Config{
+			Password: cfg.Password,
+		}
+		cfg.KeyFile = ""
 	}
 
-	// Setup SSH Config
-	clientCfg, err = ssh.ReadKeyFile(cfg.KeyFile, cfg.Passphrase)
-	if err != nil {
-		if !isPassErr.MatchString(err.Error()) {
-			return fmt.Errorf("Unable to obtain Key Passphrase - %s", err)
-		}
-		cfg.Passphrase, err = gopass.GetPasswd()
-		if err != nil {
-			return fmt.Errorf("Unable to obtain Key Passphrase - %s", err)
-		}
+	if cfg.Password == "" {
+		// If no Password is set
 		clientCfg, err = ssh.ReadKeyFile(cfg.KeyFile, cfg.Passphrase)
 		if err != nil {
-			return fmt.Errorf("Unable to read keyfile - %s", err)
+			if !isPassErr.MatchString(err.Error()) {
+				return fmt.Errorf("Unable to obtain Key Passphrase - %s", err)
+			}
+			color.White("Enter Private Key Passphrase: ")
+			cfg.Passphrase, err = gopass.GetPasswd()
+			if err != nil {
+				return fmt.Errorf("Unable to obtain Key Passphrase - %s", err)
+			}
+			clientCfg, err = ssh.ReadKeyFile(cfg.KeyFile, cfg.Passphrase)
+			if err != nil {
+				return fmt.Errorf("Unable to read keyfile - %s", err)
+			}
 		}
 	}
-	clientCfg.User = cfg.User
 
 	// Check if Efs2file is defined
 	if cfg.Efs2File == "" {
 		cfg.Efs2File = "./Efs2file"
 	}
 
+	// Setup User
+	clientCfg.User = cfg.User
+
+	// Loudness
 	if cfg.Verbose && !cfg.Quiet {
+		color.Yellow("SSH User: %s", cfg.User)
+		color.Yellow("Key Path: %s", cfg.KeyFile)
 		color.Yellow("Efs2file Path: %s", cfg.Efs2File)
 	}
 

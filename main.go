@@ -26,6 +26,7 @@ package main
 
 import (
 	"github.com/fatih/color"
+	"github.com/howeyc/gopass"
 	"github.com/jessevdk/go-flags"
 	"github.com/madflojo/efs2/app"
 	"github.com/madflojo/efs2/config"
@@ -42,6 +43,7 @@ type options struct {
 	DryRun   bool   `short:"d" long:"dryrun" description:"Print tasks to be executed without actually executing any tasks"`
 	Port     string `long:"port" description:"Define an alternate SSH Port" default:"22"`
 	User     string `short:"u" long:"user" description:"Remote host username (default: current user)"`
+	Pass     bool   `long:"passwd" description:"Ask for a password to use for authentication"`
 }
 
 // main runs the command line parsing and validations. This function will also start the application logic execution.
@@ -56,7 +58,7 @@ func main() {
 	// Convert to internal config
 	cfg := config.New()
 	cfg.Verbose = opts.Verbose
-  cfg.Quiet = opts.Quiet
+	cfg.Quiet = opts.Quiet
 	if opts.Efs2File != "" {
 		cfg.Efs2File = opts.Efs2File
 	}
@@ -71,15 +73,24 @@ func main() {
 	cfg.Port = opts.Port
 	cfg.Hosts = args
 
+	if opts.Pass {
+		color.White("Enter Private Key Passphrase: ")
+		p, err := gopass.GetPasswd()
+		if err != nil {
+			color.Red("Unable to obtain SSH Password: %s", err)
+		}
+		cfg.Password = string(p)
+	}
+
 	// Run the App
 	err = app.Run(cfg)
 	if err != nil {
-    if !cfg.Quiet {
-		color.Red("Error executing: %s", err)
-    }
+		if !cfg.Quiet {
+			color.Red("Error executing: %s", err)
+		}
 		os.Exit(1)
 	}
-  if !cfg.Quiet {
-	color.Green("Execution completed successfully")
-  }
+	if !cfg.Quiet {
+		color.Green("Execution completed successfully")
+	}
 }

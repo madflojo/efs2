@@ -38,6 +38,9 @@ type Config struct {
 	// Passphrase holds the user-provided SSH key passphrase.
 	Passphrase []byte
 
+	// Password holds the user-provided SSH password.
+	Password string
+
 	// Hosts will contain a list of remote servers to use for execution.
 	Hosts []string
 }

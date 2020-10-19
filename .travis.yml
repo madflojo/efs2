@@ -14,7 +14,7 @@ before_install:
   - echo "RUN ls -la" > ./Efs2file
 script:
   # Check format and code cleanliness
-  - gofmt -l ./
+  - gofmt -l ./ | grep -v vendor | wc -l | grep -q 0
   - go vet -v
   # Run Tests
   - make tests clean

@@ -59,6 +59,9 @@ type Config struct {
 
 	// Key provides an SSH key to use for authentication. This key is the private key and requires the public key to be pre-pushed to the remote host for authentication to work.
 	Key ssh.Signer
+
+	// Password provides a password to use for authentication. If the password is present, the Dial function will ignore the SSH Key authentication settings.
+	Password string
 }
 
 // Task is a wrapper structure used during parsing of Efs2 files. Within this structure contains SSH command and file structures.
@@ -104,6 +107,11 @@ func Dial(c Config) (*Conn, error) {
 
 	// Set SSH Key to use
 	cfg.Auth = []ssh.AuthMethod{ssh.PublicKeys(c.Key)}
+
+	// Set Password if set
+	if c.Password != "" {
+		cfg.Auth = []ssh.AuthMethod{ssh.Password(c.Password)}
+	}
 
 	// Open a connection
 	s.client, err = ssh.Dial("tcp", c.Host, cfg)

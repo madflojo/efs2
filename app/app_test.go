@@ -11,8 +11,8 @@ import (
 func TestEfs2(t *testing.T) {
 
 	cfg := config.Config{}
-  cfg.Quiet = true
-  cfg.Verbose = true
+	cfg.Quiet = true
+	cfg.Verbose = true
 	cfg.KeyFile = "/go/src/github.com/madflojo/efs2/testdata/testkey"
 	cfg.User = "test"
 	cfg.Hosts = []string{"openssh-server:2222"}
@@ -34,6 +34,28 @@ func TestEfs2(t *testing.T) {
 		}
 	})
 
+	t.Run("Simple Efs2file with Password", func(t *testing.T) {
+		f, _ := ioutil.TempFile("/tmp/", "testing.*.txt")
+		b := []byte("RUN ls -la\nRUN CMD ls -la\nPUT " + f.Name() + " /tmp/somefile 0644")
+		defer os.Remove(f.Name())
+		_, err := f.Write(b)
+		if err != nil {
+			t.Errorf("Error when creating test file - %s", err)
+		}
+		_ = f.Close()
+		cfg.Efs2File = f.Name()
+		cfg.Quiet = false
+		cfg2 := cfg
+		cfg2.KeyFile = ""
+		cfg2.Password = "testing"
+
+		err = Run(cfg2)
+		if err != nil {
+			t.Errorf("Unexpected Error from App Execution - %s", err)
+		}
+	})
+	cfg.Password = ""
+
 	t.Run("Simple Dryrun Efs2file", func(t *testing.T) {
 		f, _ := ioutil.TempFile("/tmp/", "testing.*.txt")
 		b := []byte("RUN ls -la\nRUN CMD ls -la\nPUT " + f.Name() + " /tmp/somefile 0644")
@@ -45,7 +67,7 @@ func TestEfs2(t *testing.T) {
 		_ = f.Close()
 		cfg.Efs2File = f.Name()
 		cfg.DryRun = true
-    cfg.Quiet = false
+		cfg.Quiet = false
 
 		err = Run(cfg)
 		if err != nil {
@@ -122,7 +144,7 @@ func TestEfs2(t *testing.T) {
 		}
 	})
 
-	t.Run("No Keyfile", func(t *testing.T) {
+	t.Run("No Keyfile No Password", func(t *testing.T) {
 		b := []byte("RUN ls -la\nRUN CMD ls -la")
 		f, _ := ioutil.TempFile("/tmp/", "testing.*.txt")
 		defer os.Remove(f.Name())

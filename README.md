@@ -78,7 +78,6 @@ Add your examples above!
 ## TODO
 
 * Recursive Directory support for `PUT`
-* Password Authentication support
 * Packaging for brew
 * Templating for uploads
 

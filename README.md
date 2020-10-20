@@ -57,6 +57,7 @@ $ efs2 host1.example.com host2.example.com
   -d, --dryrun    Print tasks to be executed without actually executing any tasks
       --port=     Define an alternate SSH Port (default: 22)
   -u, --user=     Remote host username (default: current user)
+      --passwd    Ask for a password to use for authentication
 ```
 
 ## Installation

@@ -65,9 +65,3 @@ It is also possible to install Efs2 with Go.
 ```console
 go get -u github.com/madflojo/efs2
 ```
-
-## Efs2file's In the wild
-
-* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server
-
-Add your examples above!

@@ -1,37 +1,89 @@
-## Welcome to GitHub Pages
+# Efs2
 
-You can use the [editor on GitHub](https://github.com/madflojo/efs2/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Don't you wish you could configure a server as easily as creating a Docker image? Meet Efs2, A dead simple configuration management tool that is powered by stupid shell scripts.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Efs2 is an idea to combine the stupid shell scripts philosophy of [fss](https://github.com/brandonhilkert/fucking_shell_scripts) with the simplicity of a `Dockerfile`.
 
-### Markdown
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/madflojo/efs2)](https://pkg.go.dev/github.com/madflojo/efs2) [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/efs2)](https://goreportcard.com/report/github.com/madflojo/efs2) [![Build Status](https://travis-ci.com/madflojo/efs2.svg?branch=master)](https://travis-ci.com/madflojo/efs2) [![Coverage Status](https://coveralls.io/repos/github/madflojo/efs2/badge.svg)](https://coveralls.io/github/madflojo/efs2)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Efs2 by Example: NGINX
 
-```markdown
-Syntax highlighted code block
+Let's take a look at how easy it is to configure an NGINX server.
 
-# Header 1
-## Header 2
-### Header 3
+### The Efs2file
 
-- Bulleted
-- List
+An `Efs2file` powers efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
 
-1. Numbered
-2. List
+```Dockerfile
+# Install and Configure NGINX
 
-**Bold** and _Italic_ and `Code` text
+# Run apt-get update
+RUN apt-get update --fix-missing && apt-get -y upgrade
 
-[Link](url) and ![Image](src)
+# Install nginx
+RUN apt-get install nginx
+
+# Deploy Config files
+PUT nginx.conf /etc/nginx/nginx.conf 0644
+PUT example.com /etc/nginx/sites-available/example.com 0644
+
+# Create a Symlink
+RUN ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+
+# Restart NGINX
+RUN systemctl restart nginx
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+The above `Efs2file` showcases how simple the Efs2 instructions are. Our NGINX server is configured with two simple instructions `RUN` and `PUT`.
 
-### Jekyll Themes
+The `RUN` instruction is simple; it executes whatever command you provide. The `PUT` instruction uploads files. That's it, that's all the instructions included with Efs2. Simple but effective.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/madflojo/efs2/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Remote Execution
 
-### Support or Contact
+Efs2 uses SSH to execute the instructions specified within the `Efs2file`. Just run the Efs2 command, followed by the target hosts.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+```console
+$ efs2 host1.example.com host2.example.com
+```
+
+#### Command Line Options
+
+```
+  -v, --verbose   Enable verbose output
+  -q, --quiet     Silence output
+  -f, --file=     Specify an alternative Efs2File (default: ./Efs2file)
+  -i, --key=      Specify an SSH Private key to use (default: ~/.ssh/id_rsa)
+  -p, --parallel  Execute tasks in parallel
+  -d, --dryrun    Print tasks to be executed without actually executing any tasks
+      --port=     Define an alternate SSH Port (default: 22)
+  -u, --user=     Remote host username (default: current user)
+      --passwd    Ask for a password to use for authentication
+```
+
+## Installation
+
+Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
+
+It is also possible to install Efs2 with Go.
+
+```console
+go get -u github.com/madflojo/efs2
+```
+
+## Efs2file's In the wild
+
+* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server
+
+Add your examples above!
+
+## TODO
+
+* Recursive Directory support for `PUT`
+* Packaging for brew
+* Templating for uploads
+
+## Contributing
+
+Thank you for your interest in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued.
+
+Please reference our [Contributing Guide](CONTRIBUTING.md) for details.

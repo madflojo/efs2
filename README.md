@@ -6,13 +6,25 @@ Efs2 is an idea to combine the stupid shell scripts philosophy of [fss](https://
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/madflojo/efs2)](https://pkg.go.dev/github.com/madflojo/efs2) [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/efs2)](https://goreportcard.com/report/github.com/madflojo/efs2) [![Build Status](https://travis-ci.com/madflojo/efs2.svg?branch=master)](https://travis-ci.com/madflojo/efs2) [![Coverage Status](https://coveralls.io/repos/github/madflojo/efs2/badge.svg)](https://coveralls.io/github/madflojo/efs2)
 
-## Efs2 by Example: NGINX
+## Getting Started
 
-Let's take a look at how easy it is to configure an NGINX server.
+Let's take a look at how easy it is to use Efs2 to configure NGINX on Ubuntu.
+
+### Installation
+
+Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
+
+It is also possible to install Efs2 with Go (requires v1.14+).
+
+```console
+go get -u github.com/madflojo/efs2
+```
+
+Once installed, we can start defining our steps to setup NGINX.
 
 ### The Efs2file
 
-An `Efs2file` powers efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
+An `Efs2file` powers Efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
 
 ```Dockerfile
 # Install and Configure NGINX
@@ -24,11 +36,10 @@ RUN apt-get update --fix-missing && apt-get -y upgrade
 RUN apt-get install nginx
 
 # Deploy Config files
-PUT nginx.conf /etc/nginx/nginx.conf 0644
-PUT example.com /etc/nginx/sites-available/example.com 0644
+PUT example.com.conf /etc/nginx/sites-available/example.com.conf 0644
 
 # Create a Symlink
-RUN ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+RUN ln -s /etc/nginx/sites-available/example.com.conf /etc/nginx/sites-enabled/example.com.conf
 
 # Restart NGINX
 RUN systemctl restart nginx
@@ -46,9 +57,11 @@ Efs2 uses SSH to execute the instructions specified within the `Efs2file`. Just 
 $ efs2 host1.example.com host2.example.com
 ```
 
-#### Command Line Options
+#### Command-Line Options
 
-```
+Efs2 offers several additional options, such as parallel execution and various authentication methods.
+
+```console
   -v, --verbose   Enable verbose output
   -q, --quiet     Silence output
   -f, --file=     Specify an alternative Efs2File (default: ./Efs2file)
@@ -60,30 +73,10 @@ $ efs2 host1.example.com host2.example.com
       --passwd    Ask for a password to use for authentication
 ```
 
-## Installation
+## Call to Action
 
-Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
+Efs2 is a small project to fit the fine line between complex configuration management and simple shell scripts.  We are always looking for users to share their stories and contribute to our [examples repository](https://github.com/madflojo/efs2-examples).
 
-It is also possible to install Efs2 with Go.
+For those interested in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued. Please reference our [Issues Page](/issues) for open ideas and our [Contributing Guide](CONTRIBUTING.md) for contribution details.
 
-```console
-go get -u github.com/madflojo/efs2
-```
-
-## Efs2file's In the wild
-
-* [madflojo/masterless-salt-base](https://github.com/madflojo/masterless-salt-base/blob/master/Efs2file) - Installs and Configures a Masterless Salt Minion server
-
-Add your examples above!
-
-## TODO
-
-* Recursive Directory support for `PUT`
-* Packaging for brew
-* Templating for uploads
-
-## Contributing
-
-Thank you for your interest in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued.
-
-Please reference our [Contributing Guide](CONTRIBUTING.md) for details.
+If you like Efs2, please tell others about it by sharing this project on the social media site of your choice.

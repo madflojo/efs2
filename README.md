@@ -77,6 +77,6 @@ Efs2 offers several additional options, such as parallel execution and various a
 
 Efs2 is a small project to fit the fine line between complex configuration management and simple shell scripts.  We are always looking for users to share their stories and contribute to our [examples repository](https://github.com/madflojo/efs2-examples).
 
-For those interested in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued. Please reference our [Issues Page](/issues) for open ideas and our [Contributing Guide](CONTRIBUTING.md) for contribution details.
+For those interested in helping develop Efs2. The time, skills, and perspectives you contribute to this project are valued. Please reference our [Issues Page](https://github.com/madflojo/efs2/issues) for open ideas and our [Contributing Guide](CONTRIBUTING.md) for contribution details.
 
 If you like Efs2, please tell others about it by sharing this project on the social media site of your choice.

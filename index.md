@@ -2,13 +2,25 @@ Don't you wish you could configure a server as easily as creating a Docker image
 
 Efs2 is an idea to combine the stupid shell scripts philosophy of [fss](https://github.com/brandonhilkert/fucking_shell_scripts) with the simplicity of a `Dockerfile`.
 
-## Efs2 by Example: NGINX
+## Getting Started
 
-Let's take a look at how easy it is to configure an NGINX server.
+Let's take a look at how easy it is to use Efs2 to configure NGINX on Ubuntu.
+
+### Installation
+
+Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
+
+It is also possible to install Efs2 with Go (requires v1.14+).
+
+```console
+go get -u github.com/madflojo/efs2
+```
+
+Once installed we can start defining our steps to setup NGINX.
 
 ### The Efs2file
 
-An `Efs2file` powers efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
+An `Efs2file` powers Efs2's configuration; much like a `Dockerfile`, this file uses a simple set of instructions to configure our target servers.
 
 ```Dockerfile
 # Install and Configure NGINX
@@ -20,11 +32,10 @@ RUN apt-get update --fix-missing && apt-get -y upgrade
 RUN apt-get install nginx
 
 # Deploy Config files
-PUT nginx.conf /etc/nginx/nginx.conf 0644
-PUT example.com /etc/nginx/sites-available/example.com 0644
+PUT example.com.conf /etc/nginx/sites-available/example.com.conf 0644
 
 # Create a Symlink
-RUN ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+RUN ln -s /etc/nginx/sites-available/example.com.conf /etc/nginx/sites-enabled/example.com.conf
 
 # Restart NGINX
 RUN systemctl restart nginx
@@ -44,7 +55,9 @@ $ efs2 host1.example.com host2.example.com
 
 #### Command Line Options
 
-```
+Efs2 offers several additional options such as parallel execution and various authentication methods.
+
+```console
   -v, --verbose   Enable verbose output
   -q, --quiet     Silence output
   -f, --file=     Specify an alternative Efs2File (default: ./Efs2file)
@@ -54,14 +67,4 @@ $ efs2 host1.example.com host2.example.com
       --port=     Define an alternate SSH Port (default: 22)
   -u, --user=     Remote host username (default: current user)
       --passwd    Ask for a password to use for authentication
-```
-
-## Installation
-
-Efs2 is simple to install, with the fastest method being to download one of our [binary releases](https://github.com/madflojo/efs2/releases).
-
-It is also possible to install Efs2 with Go.
-
-```console
-go get -u github.com/madflojo/efs2
 ```

@@ -68,3 +68,9 @@ Efs2 offers several additional options, such as parallel execution and various a
   -u, --user=     Remote host username (default: current user)
       --passwd    Ask for a password to use for authentication
 ```
+
+## Call to Action
+
+Efs2 is a small project to fit the fine line between complex configuration management and simple shell scripts.  We are always looking for users to share their stories and contribute to our examples repository.
+
+If you like Efs2, please tell others about it by sharing this project on the social media site of your choice

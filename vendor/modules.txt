@@ -1,6 +1,8 @@
 # github.com/fatih/color v1.9.0
 ## explicit
 github.com/fatih/color
+# github.com/hashicorp/go-version v1.2.1
+## explicit
 # github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c
 ## explicit
 github.com/howeyc/gopass
@@ -13,6 +15,8 @@ github.com/kr/fs
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.11
 github.com/mattn/go-isatty
+# github.com/mitchellh/gox v1.0.1
+## explicit
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
 # github.com/pkg/sftp v1.12.0

@@ -22,3 +22,9 @@ build:
 install:
 	@echo "Installing from source"
 	go install
+
+release:
+	@echo "Creating Release Binaries"
+	go get -u github.com/mitchellh/gox
+	mkdir -p build
+	gox -output="build/{{.OS}}_{{.Arch}}/{{.Dir}}"

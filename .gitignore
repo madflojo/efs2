@@ -21,3 +21,6 @@ coverage/
 
 # No Swapfiles
 *.swp
+
+# Build Directory
+build/

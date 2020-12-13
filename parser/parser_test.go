@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -74,6 +75,13 @@ func TestParsing(t *testing.T) {
 		instructions: 1,
 	}
 	cc = append(cc, c)
+	c = testCase{
+		name:         "MultiLine",
+		data:         []byte("# This is a Comment\nRUN CMD ls -la \\ /tmp/somedir\nRUN this is a command\n"),
+		pass:         true,
+		instructions: 2,
+	}
+	cc = append(cc, c)
 
 	// Execute Tests in a bunch of sub-tests
 	for _, x := range cc {
@@ -99,6 +107,72 @@ func TestParsing(t *testing.T) {
 				if len(tasks) != x.instructions {
 					t.Errorf("Parser did not return the expected number of tasks got %d, expected %d", len(tasks), x.instructions)
 				}
+			}
+		})
+	}
+
+}
+
+func TestMultiLineParsing(t *testing.T) {
+	var cc []testCase
+	c := testCase{
+		name: "Slash at the end",
+		pass: true,
+		data: []byte("this is a multi \\\nline command"),
+	}
+	cc = append(cc, c)
+	c = testCase{
+		name: "Slash in the middle",
+		pass: true,
+		data: []byte("this is not a multi\\line command"),
+	}
+	cc = append(cc, c)
+	c = testCase{
+		name: "Slash with whitespace",
+		pass: true,
+		data: []byte("this is a multi\\ \n\tline command"),
+	}
+	cc = append(cc, c)
+	c = testCase{
+		name: "No Slash multiline",
+		pass: false,
+		data: []byte("this is not a multi\n\tline command"),
+	}
+	cc = append(cc, c)
+
+	for _, x := range cc {
+		t.Run("Test MultiLine Parser - "+x.name, func(t *testing.T) {
+			cmd := fmt.Sprintf("%s", x.data)
+			data := []byte("RUN " + cmd)
+
+			// Create Temp File
+			f, _ := ioutil.TempFile("/tmp/", "testing.*.txt")
+			defer os.Remove(f.Name())
+			_, err := f.Write(data)
+			if err != nil {
+				t.Errorf("Error creating test file - %s", err)
+				return
+			}
+
+			// Test Parsing
+			tasks, err := Parse(f.Name())
+			if err != nil && x.pass {
+				t.Errorf("Unexpected error when calling Parser - %s", err)
+				return
+			}
+			if x.pass == false && err == nil {
+				t.Errorf("Unexpected success when calling parser with invalid data")
+				return
+			}
+
+			if len(tasks) < 1 {
+				t.Errorf("Tasks count is not correct, got %d", len(tasks))
+				return
+			}
+
+			if tasks[0].Command.Cmd != cmd && x.pass {
+				t.Errorf("Command in task does not match base command got %#q expected %#q", tasks[0].Command.Cmd, cmd)
+				return
 			}
 		})
 	}

@@ -47,12 +47,13 @@ func Parse(f string) ([]ssh.Task, error) {
 	isComment := regexp.MustCompile(`^#.*`)
 	// Matches Comments
 	isEmpty := regexp.MustCompile(`^$`)
+	// Matches Command multi-line continuations
+	isMultiLine := regexp.MustCompile(`.*\\`)
 
 	lc := 0
 	for s.Scan() {
 		lc = lc + 1
-
-		l := strings.TrimSpace(s.Text())
+		l := s.Text()
 		c := strings.Split(l, " ")
 
 		if isComment.MatchString(l) {
@@ -64,7 +65,15 @@ func Parse(f string) ([]ssh.Task, error) {
 		}
 
 		if !isRun.MatchString(l) && !isOldRun.MatchString(l) && !isPut.MatchString(l) {
-			return tasks, fmt.Errorf("Unable to parse Efs2file line %s", l)
+			// Check if multi-line instruction and if so glue together
+			if len(tasks) > 0 {
+				if isMultiLine.MatchString(tasks[len(tasks)-1].Command.Cmd) {
+					tasks[len(tasks)-1].Task = tasks[len(tasks)-1].Task + l
+					tasks[len(tasks)-1].Command.Cmd = tasks[len(tasks)-1].Command.Cmd + "\n" + l
+					continue
+				}
+			}
+			return tasks, fmt.Errorf("Unable to parse Efs2file line %d: %s", lc, l)
 		}
 
 		t := ssh.Task{

@@ -70,6 +70,13 @@ func TestParsing(t *testing.T) {
 	}
 	cc = append(cc, c)
 	c = testCase{
+		name:         "Just Comments",
+		data:         []byte("# Just a comment here"),
+		pass:         true,
+		instructions: 0,
+	}
+	cc = append(cc, c)
+	c = testCase{
 		name:         "Comments",
 		data:         []byte("# This is a Comment\nRUN CMD ls -la\n"),
 		pass:         true,
@@ -81,6 +88,13 @@ func TestParsing(t *testing.T) {
 		data:         []byte("# This is a Comment\nRUN CMD ls -la \\ /tmp/somedir\nRUN this is a command\n"),
 		pass:         true,
 		instructions: 2,
+	}
+	cc = append(cc, c)
+	c = testCase{
+		name:         "Invalid Mode Number for Put",
+		data:         []byte("PUT somefile /path/to/nofile 0999"),
+		pass:         false,
+		instructions: 1,
 	}
 	cc = append(cc, c)
 

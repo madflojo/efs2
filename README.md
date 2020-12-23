@@ -66,11 +66,11 @@ Efs2 offers several additional options, such as parallel execution and various a
   -q, --quiet     Silence output
   -f, --file=     Specify an alternative Efs2File (default: ./Efs2file)
   -i, --key=      Specify an SSH Private key to use (default: ~/.ssh/id_rsa)
-  -p, --parallel  Execute tasks in parallel
+  -p, --parallel  Execute tasks across multiple hosts in parallel
   -d, --dryrun    Print tasks to be executed without actually executing any tasks
       --port=     Define an alternate SSH Port (default: 22)
   -u, --user=     Remote host username (default: current user)
-      --passwd    Ask for a password to use for authentication
+      --passwd    Ask for a password to use for host authentication
 ```
 
 ## Call to Action

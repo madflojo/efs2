@@ -38,12 +38,12 @@ type options struct {
 	Verbose  bool   `short:"v" long:"verbose" description:"Enable verbose output"`
 	Quiet    bool   `short:"q" long:"quiet" description:"Silence output"`
 	Efs2File string `short:"f" long:"file" description:"Specify an alternative Efs2File" default:"./Efs2file"`
-	KeyFile  string `short:"i" long:"key" description:"Specify an SSH Private key to use (default: ~/.ssh/id_rsa)"`
-	Parallel bool   `short:"p" long:"parallel" description:"Execute tasks in parallel"`
+	KeyFile  string `short:"i" long:"key" description:"Specify a SSH Private key to use (default: ~/.ssh/id_rsa)"`
+	Parallel bool   `short:"p" long:"parallel" description:"Execute tasks across multiple hosts in parallel"`
 	DryRun   bool   `short:"d" long:"dryrun" description:"Print tasks to be executed without actually executing any tasks"`
 	Port     string `long:"port" description:"Define an alternate SSH Port" default:"22"`
 	User     string `short:"u" long:"user" description:"Remote host username (default: current user)"`
-	Pass     bool   `long:"passwd" description:"Ask for a password to use for authentication"`
+	Pass     bool   `long:"passwd" description:"Ask for a password to use for host authentication"`
 }
 
 // main runs the command line parsing and validations. This function will also start the application logic execution.

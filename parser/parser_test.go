@@ -32,7 +32,7 @@ func TestParsenofile(t *testing.T) {
 }
 
 func TestParsing(t *testing.T) {
-  t.Parallel()
+	t.Parallel()
 	// Define Test Cases
 	var cc []testCase
 	c := testCase{
@@ -87,7 +87,7 @@ func TestParsing(t *testing.T) {
 	// Execute Tests in a bunch of sub-tests
 	for _, x := range cc {
 		t.Run("Test Parsing - "+x.name, func(t *testing.T) {
-      t.Parallel()
+			t.Parallel()
 			// Create Temp File
 			f, _ := ioutil.TempFile("/tmp/", "testing.*.txt")
 			defer os.Remove(f.Name())

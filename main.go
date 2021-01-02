@@ -74,7 +74,7 @@ func main() {
 	cfg.Hosts = args
 
 	if opts.Pass {
-		color.White("Enter Private Key Passphrase: ")
+		color.White("Enter Password for %s: ", cfg.User)
 		p, err := gopass.GetPasswd()
 		if err != nil {
 			color.Red("Unable to obtain SSH Password: %s", err)

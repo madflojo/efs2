@@ -16,8 +16,8 @@ Efs2 is simple to install, with the fastest method being to download one of our 
 
 It is also possible to install Efs2 with Go (requires v1.14+).
 
-```console
-go get -u github.com/madflojo/efs2
+``` shell-session
+$ go get -u github.com/madflojo/efs2
 ```
 
 Once installed, we can start defining our steps to setup NGINX.
@@ -53,7 +53,7 @@ The `RUN` instruction is simple; it executes whatever command you provide. The `
 
 Efs2 uses SSH to execute the instructions specified within the `Efs2file`. Just run the Efs2 command, followed by the target hosts.
 
-```console
+```shell-session
 $ efs2 host1.example.com host2.example.com
 ```
 
@@ -61,7 +61,7 @@ $ efs2 host1.example.com host2.example.com
 
 Efs2 offers several additional options, such as parallel execution and various authentication methods.
 
-```console
+```shell-session
   -v, --verbose   Enable verbose output
   -q, --quiet     Silence output
   -f, --file=     Specify an alternative Efs2File (default: ./Efs2file)
